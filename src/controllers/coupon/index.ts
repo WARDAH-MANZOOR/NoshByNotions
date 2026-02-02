@@ -36,12 +36,17 @@ export const deleteCoupon = async (req: Request, res: Response) => {
   }
 };
 
-
+export const applyCoupon = async (req: Request, res: Response) => {
+  const { code, total } = req.body;
+  const result = await couponService.applyCoupon(code, total);
+  res.json(result);
+};
 
 export default{
     getAllCoupons,
     createCoupon,
     updateCoupon,
-    deleteCoupon
+    deleteCoupon,
+    applyCoupon
     
 }

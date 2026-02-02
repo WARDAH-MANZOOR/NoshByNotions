@@ -5,6 +5,7 @@ import orders from "./orders/index.js"
 import user from "./users/index.js"
 import category from "./category/index.js";
 import coupon from "./coupon/index.js";
+import cart from "./cart/index.js";
 
 import express from "express";
 
@@ -15,5 +16,6 @@ export default function (app: Application) {
     app.use("/api/user", user);
     app.use("/api/category", category);
     app.use("/api/coupon", coupon);
+    app.use("/api/cart", cart);
    
 }

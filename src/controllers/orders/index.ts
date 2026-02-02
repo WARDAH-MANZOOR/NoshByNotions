@@ -18,9 +18,14 @@ export const createOrder = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Cannot create order" });
   }
 };
+export const trackOrder = async (req: Request, res: Response) => {
+  const logs = await orderService.getOrderTracking(Number(req.params.id));
+  res.json(logs);
+};
 
 export default{
     getOrders,
-    createOrder
+    createOrder,
+    trackOrder
 
 }
