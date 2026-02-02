@@ -1,10 +1,12 @@
 import productService from "./products/index.js";
 import orderService from "./orders/index.js";
 import userService from "./user/index.js";
+import categoryService from "./category/index.js";
 
 
 export {
     productService,
     orderService,
-    userService
+    userService,
+    categoryService
 }
