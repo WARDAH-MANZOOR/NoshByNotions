@@ -17,6 +17,6 @@
     },
     "resolveJsonModule": true
   },
-  "include": ["src"],          // Include the "src" folder for TypeScript compilation
+  "include": ["src", "prismaClient.ts"],          // Include the "src" folder for TypeScript compilation
   "exclude": ["node_modules"]  // Exclude node_modules from compilation
 }

@@ -1,5 +1,5 @@
 {
-  "name": "upaisa",
+  "name": "noshbynotions",
   "version": "1.0.0",
   "private": true,
   "description": "",
@@ -7,8 +7,9 @@
     "start": "nodemon ./src/bin/www",
     "dev": "npx tsc && nodemon ./src/bin/www",
     "build": "npm run migrate && npm run generate && npx tsc",
-    "migrate": "prisma migrate dev --schema src/prisma/schema.prisma",
-    "generate": "prisma generate --sql --schema src/prisma/schema.prisma",
+    "migrate": "prisma migrate dev --schema ./src/prisma/schema.prisma",
+    "generate": "prisma generate --schema ./src/prisma/schema.prisma",
+
     "test": "jest"
   },
   "keywords": [],
@@ -16,8 +17,10 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@prisma/client": "^7.3.0",
     "dotenv": "^17.2.3",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "prisma": "^7.3.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
