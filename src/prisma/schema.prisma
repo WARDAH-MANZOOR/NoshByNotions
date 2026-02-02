@@ -9,34 +9,61 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  orders    Order[]
-  createdAt DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  password   String
+  phone      String?
+  address    String?
+  role       String   @default("customer") // customer, admin
+  orders     Order[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+}
+
 model Product {
-  id          Int         @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   name        String
   description String?
   price       Float
   image       String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  orderItems  OrderItem[] // <-- add this
+  category    Category? @relation(fields: [categoryId], references: [id])
+  categoryId  Int?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  items       OrderItem[]
 }
+
 model Order {
   id         Int       @id @default(autoincrement())
   user       User      @relation(fields: [userId], references: [id])
   userId     Int
   items      OrderItem[]
-  status     String    @default("Pending")
+  status     String    @default("Pending") // Pending, Preparing, On the way, Delivered
   total      Float
   address    String
   phone      String
+  paymentMethod String @default("COD") // COD, JazzCash, Easypaisa
   createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
+
 model OrderItem {
   id        Int     @id @default(autoincrement())
   order     Order   @relation(fields: [orderId], references: [id])
@@ -46,7 +73,12 @@ model OrderItem {
   quantity  Int
 }
 
-
-
-
+model Coupon {
+  id         Int      @id @default(autoincrement())
+  code       String   @unique
+  discount   Float
+  expiryDate DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
 
