@@ -9,25 +9,17 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  name       String
-  email      String   @unique
-  password   String
-  phone      String?
-  address    String?
-  role       String   @default("customer")
-  orders     Order[]
-  cart       Cart?       
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
-
-model Admin {
   id        Int      @id @default(autoincrement())
-  username  String   @unique
+  name      String
+  email     String   @unique
   password  String
-  role      String   @default("admin")
+  phone     String
+  address   String
+  role      String   @default("customer") // customer | admin
+
+  orders    Order[]
+  cart      Cart?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -45,45 +37,18 @@ model Product {
   description String?
   price       Float
   image       String?
-  category    Category? @relation(fields: [categoryId], references: [id])
-  categoryId  Int?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  isActive    Boolean  @default(true)
+
+  categoryId  Int
+  category    Category @relation(fields: [categoryId], references: [id])
+
   items       OrderItem[]
-  cartItems  CartItem[]
+  cartItems   CartItem[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
-model Order {
-  id         Int       @id @default(autoincrement())
-  user       User      @relation(fields: [userId], references: [id])
-  userId     Int
-  items      OrderItem[]
-  status     String    @default("Pending") // Pending, Preparing, On the way, Delivered
-  total      Float
-  address    String
-  phone      String
-  paymentMethod String @default("COD") // COD, JazzCash, Easypaisa
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-}
-
-model OrderItem {
-  id        Int     @id @default(autoincrement())
-  order     Order   @relation(fields: [orderId], references: [id])
-  orderId   Int
-  product   Product @relation(fields: [productId], references: [id])
-  productId Int
-  quantity  Int
-}
-
-model Coupon {
-  id         Int      @id @default(autoincrement())
-  code       String   @unique
-  discount   Float
-  expiryDate DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
 model Cart {
   id        Int       @id @default(autoincrement())
   userId    Int       @unique
@@ -97,6 +62,53 @@ model CartItem {
   cartId    Int
   cart      Cart     @relation(fields: [cartId], references: [id])
   productId Int
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
   quantity  Int
+}
+
+model Order {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  user          User     @relation(fields: [userId], references: [id])
+  items         OrderItem[]
+
+  status        String   @default("Pending")
+  totalAmount   Float
+  address       String
+  phone         String
+  paymentMethod String   @default("COD")
+
+  statusLogs    OrderStatusLog[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  orderId   Int
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  price     Float
+  quantity  Int
+}
+
+model OrderStatusLog {
+  id        Int      @id @default(autoincrement())
+  orderId   Int
+  order     Order    @relation(fields: [orderId], references: [id])
+  status    String
+  createdAt DateTime @default(now())
+}
+
+model Coupon {
+  id         Int      @id @default(autoincrement())
+  code       String   @unique
+  discount   Float
+  expiryDate DateTime
+  isActive   Boolean  @default(true)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
