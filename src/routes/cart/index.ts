@@ -1,8 +1,11 @@
 
 import { cartController } from "../../controllers/index.js";
 import { Router } from "express";
+import { authMiddleware } from "../../middleware/auth.js";
 
 const express = Router();
+
+express.use(authMiddleware);
 
 express.post("/add", cartController.addItem);
 express.put("/update", cartController.updateItem);
