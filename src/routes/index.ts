@@ -2,7 +2,7 @@ import { Application } from "express";
 // import autoCashin from "./payin/index.js"
 import products from "./products/index.js"
 import orders from "./orders/index.js"
-import user from "./users/index.js"
+import user from "./auth/index.js"
 import category from "./category/index.js";
 import coupon from "./coupon/index.js";
 import cart from "./cart/index.js";

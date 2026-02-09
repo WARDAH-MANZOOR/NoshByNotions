@@ -6,7 +6,7 @@ interface ProductInput {
   description?: string;
   price: number;
   image?: string;
-  categoryId?: number;
+  categoryId: number;
 }
 
 export const getAllProducts = async () => {

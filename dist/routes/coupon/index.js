@@ -1,8 +1,10 @@
+import { adminOnly, authMiddleware } from "middleware/auth.js";
 import { couponController } from "../../controllers/index.js";
 import { Router } from "express";
 const express = Router();
-express.get("/", couponController.getAllCoupons);
-express.post("/", couponController.createCoupon);
-express.put("/:id", couponController.updateCoupon);
-express.delete("/:id", couponController.deleteCoupon);
+express.get("/", authMiddleware, adminOnly, couponController.getAllCoupons);
+express.post("/", authMiddleware, adminOnly, couponController.createCoupon);
+express.put("/:id", authMiddleware, adminOnly, couponController.updateCoupon);
+express.delete("/:id", authMiddleware, adminOnly, couponController.deleteCoupon);
+express.post("/apply", authMiddleware, couponController.applyCoupon);
 export default express;

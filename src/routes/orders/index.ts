@@ -7,6 +7,9 @@ const express = Router();
 
 express.get("/",authMiddleware, adminOnly, orderController.getOrders); // Admin view
 express.post("/", authMiddleware,orderController.createOrder); // User order
-express.get("/track/:id",authMiddleware, orderController.trackOrder); // Track order status
-
-export default express;
+express.get("/tracking/:id",authMiddleware, orderController.trackOrder); // Track order status
+// admin
+express.put("/:id/status",authMiddleware,adminOnly,orderController.updateStatus);
+express.get("/my-orders",authMiddleware,orderController.getMyOrders);
+  
+  export default express;

@@ -85,10 +85,82 @@ export const getOrderTracking = async (orderId: number) => {
     orderBy: { createdAt: "asc" }
   });
 };
+const STATUS_FLOW = [
+  "Pending",
+  "Preparing",
+  "On the way",
+  "Delivered"
+];
+
+export const updateOrderStatus = async (
+  orderId: number,
+  newStatus: string
+) => {
+  const order = await prisma.order.findUnique({
+    where: { id: orderId }
+  });
+
+  if (!order) {
+    throw new Error("Order not found");
+  }
+
+  // Delivered ke baad change allowed nahi
+  if (order.status === "Delivered") {
+    throw new Error("Order already delivered");
+  }
+
+  // Cancelled special case
+  if (newStatus === "Cancelled") {
+    await prisma.order.update({
+      where: { id: orderId },
+      data: { status: "Cancelled" }
+    });
+
+    await prisma.orderStatusLog.create({
+      data: { orderId, status: "Cancelled" }
+    });
+
+    return;
+  }
+
+  const currentIndex = STATUS_FLOW.indexOf(order.status);
+  const newIndex = STATUS_FLOW.indexOf(newStatus);
+
+  if (newIndex !== currentIndex + 1) {
+    throw new Error("Invalid status flow");
+  }
+
+  // update order
+  await prisma.order.update({
+    where: { id: orderId },
+    data: { status: newStatus }
+  });
+
+  // auto log insert
+  await prisma.orderStatusLog.create({
+    data: {
+      orderId,
+      status: newStatus
+    }
+  });
+};
+export const getMyOrders = async (userId: number) => {
+  return prisma.order.findMany({
+    where: { userId },
+    include: {
+      items: {
+        include: { product: true }
+      }
+    },
+    orderBy: { createdAt: "desc" }
+  });
+};
 
 export default{
     getAllOrders,
     createOrder,
-    getOrderTracking
+    getOrderTracking,
+    updateOrderStatus,
+    getMyOrders
 
 }

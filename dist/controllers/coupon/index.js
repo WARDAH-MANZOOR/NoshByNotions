@@ -35,9 +35,15 @@ export const deleteCoupon = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+export const applyCoupon = async (req, res) => {
+    const { code, total } = req.body;
+    const result = await couponService.applyCoupon(code, total);
+    res.json(result);
+};
 export default {
     getAllCoupons,
     createCoupon,
     updateCoupon,
-    deleteCoupon
+    deleteCoupon,
+    applyCoupon
 };
